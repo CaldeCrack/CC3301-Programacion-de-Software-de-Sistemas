@@ -1,0 +1,12 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include "reemplazar.h"
+
+char *reemplazo(char *s, char c, char *pal) {
+  ... complete ...
+}
+
+void reemplazar(char *s, char c, char *pal) {
+  ... complete ...
+}

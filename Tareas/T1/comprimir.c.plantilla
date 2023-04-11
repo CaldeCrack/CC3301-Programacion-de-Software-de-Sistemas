@@ -1,0 +1,8 @@
+#include <stdlib.h>
+#include <string.h>
+
+#include "comprimir.h"
+
+uint comprimir(uint a[], int nbits) {
+  ... complete ...
+}
