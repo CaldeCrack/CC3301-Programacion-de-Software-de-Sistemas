@@ -26,12 +26,14 @@ char* reemplazo(char *s, char c, char *pal) {
       }
       pal-=lenP+1;
     }else{
-      strcpy(newStr, pal);
-      // *newStr = *s;
+      // strcpy(newStr, *s);
+      *newStr = *s;
     }
     s++;
     newStr++;
   }
+  *newStr = '\0';
+  newStr-=len+1;
   // printf("newStr: %s\n", newStr);
   // *newStr = "a";
   // free(newStr);
