@@ -4,13 +4,13 @@
 #include "reemplazar.h"
 
 int main(){
-  char* res = reemplazo("bonjour", 'a', "alo");
+  char* res = reemplazo("banjaar", 'a', "alo");
   printf("res: %s\n", res);
   return 0;
 }
 
 char* reemplazo(char *s, char c, char *pal) {
-  int len = 0, lenP = 0;
+  int len = 0, lenP = 0, aux = 0;
   while(*s++) len++;
   s-=len+1;
   while(*pal++) lenP++;
@@ -18,31 +18,16 @@ char* reemplazo(char *s, char c, char *pal) {
   char* newStr = malloc(len*lenP+1);
   while(len--){
     if(*s==c){
-      while(*pal++){
-        strcpy(newStr, pal);
-        // *newStr = *pal;
-        newStr++;
-        pal++;
-      }
-      pal-=lenP+1;
-    }else{
-      // strcpy(newStr, *s);
-      *newStr = *s;
-    }
-    s++;
-    newStr++;
+      strcpy(newStr, pal);
+      newStr+=lenP-1;
+      aux+=lenP-1;
+    } else *newStr = *s;
+    aux++; s++; newStr++;
   }
   *newStr = '\0';
-  newStr-=len+1;
-  // printf("newStr: %s\n", newStr);
-  // *newStr = "a";
-  // free(newStr);
+  newStr-=aux;
   return newStr;
 }
-
-
-
-
 
 void reemplazar(char *s, char c, char *pal) {
   return;
