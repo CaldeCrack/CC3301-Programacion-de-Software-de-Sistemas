@@ -3,12 +3,12 @@
 #include <stdlib.h>
 #include "reemplazar.h"
 
-int main(){
-  char r[15] = "banjaar";
-  reemplazar(r, 'a', "ou");
-  printf("r: %s\n", r);
-  return 0;
-}
+// int main(){
+//   char r[15] = "banjaar";
+//   reemplazar(r, 'a', "ou");
+//   printf("r: %s\n", r);
+//   return 0;
+// }
 
 char* reemplazo(char *s, char c, char *pal) {
   int len = 0, lenP = 0, aux = 0;
@@ -31,19 +31,30 @@ char* reemplazo(char *s, char c, char *pal) {
 }
 
 void reemplazar(char *s, char c, char *pal) {
-  int len = 0, lenP = 0;
-  while(*s++) len++;
+  int len = 0, lenP = 0, matches = 0;
+  while(*s++){
+    len++;
+    if(*s==c) matches++;
+  }
   s-=len+1;
   while(*pal++) lenP++;
-  pal-=lenP+1;
-  char *final = s+len-1;
+  pal-=2;
+  char *final = s+len;
+  char *str = s+len+matches*(lenP-1)-1;
   if(lenP<2){
     while(*s++){
-      if(*s==c) *s = *pal;
+      if(*s==c) *str = *pal;
     }
   } else {
     while(*final--!=*s){
-      if(*final==c) strcpy(final, pal);
+      if(*final==c){
+        for(int i=0; i<lenP; i++){
+          *str = *pal;
+          pal--; str--;
+        }
+        pal+=lenP; str++;
+      } else *str = *final;
+      str--;
     }
   }
 }
