@@ -4,8 +4,9 @@
 #include "reemplazar.h"
 
 int main(){
-  char* res = reemplazo("banjaar", 'a', "alo");
-  printf("res: %s\n", res);
+  char r[15] = "banjaar";
+  reemplazar(r, 'a', "ou");
+  printf("r: %s\n", r);
   return 0;
 }
 
@@ -30,5 +31,19 @@ char* reemplazo(char *s, char c, char *pal) {
 }
 
 void reemplazar(char *s, char c, char *pal) {
-  return;
+  int len = 0, lenP = 0;
+  while(*s++) len++;
+  s-=len+1;
+  while(*pal++) lenP++;
+  pal-=lenP+1;
+  char *final = s+len-1;
+  if(lenP<2){
+    while(*s++){
+      if(*s==c) *s = *pal;
+    }
+  } else {
+    while(*final--!=*s){
+      if(*final==c) strcpy(final, pal);
+    }
+  }
 }
