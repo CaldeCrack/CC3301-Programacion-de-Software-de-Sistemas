@@ -4,29 +4,29 @@
 #include "reemplazar.h"
 
 // int main(){
-//   char r[15] = "banjaar";
-//   reemplazar(r, 'a', "ou");
-//   printf("r: %s\n", r);
+//   char res[25] = "%&/(hola que tal\0    )=?";
+//   char *r= &res[4];
+//   reemplazar(r, 'a', "opa");
+//   reemplazar(r, 'o', "");
 //   return 0;
 // }
 
 char* reemplazo(char *s, char c, char *pal) {
-  int len = 0, lenP = 0, aux = 0;
-  while(*s++) len++;
+  int len = strlen(s), lenP = strlen(pal), matches = 0;
+  if(*s==c) matches++;
+  while(*s++) if(*s==c) matches++;
   s-=len+1;
-  while(*pal++) lenP++;
-  pal-=lenP+1;
-  char* newStr = malloc(len*lenP+1);
+  int newStrLen = len+matches*(lenP-1);
+  char* newStr = malloc(newStrLen+1);
   while(len--){
     if(*s==c){
       strcpy(newStr, pal);
       newStr+=lenP-1;
-      aux+=lenP-1;
     } else *newStr = *s;
-    aux++; s++; newStr++;
+    s++; newStr++;
   }
   *newStr = '\0';
-  newStr-=aux;
+  newStr-=newStrLen;
   return newStr;
 }
 
@@ -40,7 +40,9 @@ void reemplazar(char *s, char c, char *pal) {
   while(*pal++) lenP++;
   pal-=2;
   char *final = s+len;
-  char *str = s+len+matches*(lenP-1)-1;
+  char *str = s+len+matches*(lenP-1);
+  // char *strAux = s;
+  str--;
   if(lenP<2){
     while(*s++){
       if(*s==c) *str = *pal;
@@ -56,5 +58,7 @@ void reemplazar(char *s, char c, char *pal) {
       } else *str = *final;
       str--;
     }
+  str += len+matches*(lenP-1)+1;
+  *str = '\0';
   }
 }
