@@ -3,12 +3,6 @@
 #include <stdlib.h>
 #include "reemplazar.h"
 
-// int main(){
-//   char res[25] = "a3+a3+a3+";
-//   printf("len res: %i\n", strlen(res));
-//   return 0;
-// }
-
 char* reemplazo(char *s, char c, char *pal) {
   int len = strlen(s), lenP = strlen(pal), matches = 0;
   if(*s==c) matches++;
@@ -33,12 +27,12 @@ void reemplazar(char *s, char c, char *pal) {
   while(*s++) if(*s==c) matches++;
   s-=len+1; pal+=lenP-1;
   if(lenP<2){
-    char *str = s+1;
+    char *str = s;
     while(len--){
-      if(*s==c){
-        *s=*pal;
-        if(!lenP) strcpy(s, str);
-      }
+      if(*str==c){
+        if(lenP) *s=*pal;
+        else s--;
+      } else *s=*str;
       s++; str++;
     }
     *s = '\0';
