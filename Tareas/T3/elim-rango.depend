@@ -1,0 +1,15 @@
+# depslib dependency file v1.0
+1681498047 source:/home/lmateu/Cursos/CC3301/231/T3-sol/elim-rango.c
+	<stdio.h>
+	<stdlib.h>
+	"elim-rango.h"
+
+1681497629 /home/lmateu/Cursos/CC3301/231/T3-sol/elim-rango.h
+
+1681506631 source:/home/lmateu/Cursos/CC3301/231/T3-sol/test-elim-rango.c
+	<stdio.h>
+	<stdlib.h>
+	<sys/time.h>
+	<sys/resource.h>
+	"elim-rango.h"
+
