@@ -3,28 +3,9 @@
 
 #include "elim-rango.h"
 
-// static Nodo *lista(int x, Nodo *cola) {
-//   Nodo *nodo= malloc(sizeof(Nodo));
-//   if (nodo==NULL) {
-//     exit(1);
-//   }
-//   nodo->x= x;
-//   nodo->prox= cola;
-//   return nodo;
-// }
-
-// static Nodo *listaTest() {
-//   return lista(2, lista(4, lista(7, lista(8, lista(9, NULL)))));
-// }
-
-// int main(){
-//   Nodo *head = listaTest();
-//   eliminarRango(&head, 5, 7);
-// }
-
 void eliminarRango(Nodo **phead, double y, double z) {
-  int lower = 0, greater = 1;
-  Nodo *first, *last, *origin = *phead;
+  int lower = 0;
+  Nodo *first, *last = NULL, *origin = *phead;
   while((*phead) -> x < y){
     lower = 1;
     first = *phead;
@@ -36,14 +17,10 @@ void eliminarRango(Nodo **phead, double y, double z) {
     *phead = head -> prox;
     free(head);
     last = *phead;
-    if(*phead == NULL){
-      greater = 0;
-      break;
-    }
+    if(*phead == NULL) break;
   }
   if(lower){
-    *phead = first;
-    (*phead) -> prox = last;
+    first -> prox = last;
+    *phead = origin;
   }
-  if(lower && !greater) *phead = origin;
 }
