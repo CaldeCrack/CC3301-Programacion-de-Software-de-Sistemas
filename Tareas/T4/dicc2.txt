@@ -1,0 +1,26 @@
+correr:andar tan rapidamente que los pies quedan en el aire           
+                                                                      
+                                                                      
+canario:ave paseriforme de la familia de los fringilidos              
+embarcacion:todo tipo de artilugio capaz de navegar en el agua        
+palacio:edificio utilizado como residencia de un magnate              
+nadar:trasladarse en el agua, con los brazos y sin tocar el suelo     
+                                                                      
+                                                                      
+                                                                      
+celular:aparato portatil de un sistema de telefonia celular           
+                                                                      
+casa:edificacion construida para ser habitada                         
+                                                                      
+posada:establecimiento economico de hospedaje para viajeros           
+alimento:sustancia ingerida por un ser vivo                           
+                                                                      
+                                                                      
+                                                                      
+                                                                      
+                                                                      
+taladro:herramienta aguda o cortante con que se agujerea la madera    
+perro:mamifero domestico con olfato muy fino, inteligente y leal      
+techo:parte superior de un edificio que lo cubre y cierra             
+bolsillo:bolsa pequena                                                
+lluvia:precipitacion de particulas liquidas de agua                   
