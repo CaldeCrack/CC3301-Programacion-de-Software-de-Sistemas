@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "comprimir.h": "c",
+        "string.h": "c",
+        "cstdio": "c"
+    }
+}
