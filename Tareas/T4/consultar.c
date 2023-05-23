@@ -101,21 +101,33 @@ Felicitaciones: aprobo todos los tests
 */
 
 int main(int argc, char *argv[]) {
+  // wrong use of the comand
+  if(argc!=3){
+    fprintf(stderr, "Uso: ./consultar.bin <diccionario> <llave>\n");
+    exit(1);
+  }
+
   // initial data
   char buff[MAXTAM];
   char *arch = argv[1], *key = argv[2];
   int lenKey = strlen(key);
-
-  // empty dictionary
   FILE *fileDicc = fopen(arch, "r");
-  // if (!fileDicc){
-  //   fprintf(stderr, "%s: el dicionario esta vacio", arch);
-  //   exit(1);
-  // }
+
+  // file does not exist
+  if(!fileDicc){
+    perror(arch);
+    exit(1);
+  }
 
   // first line length
-  int lenLine;
-  if (fgets(buff, MAXTAM, fileDicc) != NULL) lenLine = strlen(buff);
+  int lenLine = 0;
+  if(fgets(buff, MAXTAM, fileDicc) != NULL) lenLine = strlen(buff);
+
+  // empty file
+  if(!lenLine){
+    fprintf(stderr, "%s: el dicionario esta vacio\n", arch);
+    exit(1);
+  }
 
   // lines greater than the limit
   // if(lenLine>MAXTAM){
@@ -136,31 +148,34 @@ int main(int argc, char *argv[]) {
 
   // read file
   while(j--){
+    // read line
+    fseek(fileDicc, n*lenLine, SEEK_SET);
+    int lineLength = ftell(fileDicc);
+    // different line length
+    if(lineLength!=lenLine){
+      // fprintf(stderr, "%s: linea %i de tamaño incorrecto\n", arch, n);
+      printf("%i\n", lineLength);
+      exit(1);
+    }
+
     fseek(fileDicc, n*lenLine, SEEK_SET);
     fread(buff, lenLine, 1, fileDicc);
-    // if(fread(buff, lenLine, 1, fileDicc) != 1){
-    //   fprintf(stderr, "%s: linea %i de tamaño incorrecto", arch, n);
-    //   exit(4);
-    // }
-
-    // it does not have the :
-    // if(buff[lenKey] != ':'){
-    //   fprintf(stderr, "%s: linea %i no posee : para terminar la llave", arch, n);
-    //   exit(5);
-    // }
-
     int rc = strncmp(key, buff, lenKey);
+
 
     // same keys
     if(!rc){
       fseek(fileDicc, n*lenLine+lenKey+1, SEEK_SET);
       fgets(buff, lenLine, fileDicc);
       fprintf(stdout, buff);
+      return 0;
     }
 
     // next line
     if(++n>lines) n=0;
   }
+  // the requested key is not in the file
+  fprintf(stderr, "%s: el diccionario no contiene la llave %s\n", arch, key);
   fclose(fileDicc);
-  return 0;
+  exit(1);
 }

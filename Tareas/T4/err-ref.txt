@@ -1,1 +1,0 @@
-dicc.txt: el diccionario no contiene la llave gato
