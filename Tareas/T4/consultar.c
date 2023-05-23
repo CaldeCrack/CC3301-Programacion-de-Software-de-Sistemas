@@ -7,67 +7,160 @@
 
 #define MAXTAM (800+2)
 
-//* bash test-consultar.sh ./prof.ref-$ARCH
+/*
+Test de la llaves existentes de dicc.txt
+Ejecutando: ./prof.ref-x86_64 dicc.txt embarcacion
+|todo tipo de artilugio capaz de navegar en el agua                  
+Ejecutando: ./prof.ref-x86_64 dicc.txt casa
+edificacion construida para ser habitada                                   
+Ejecutando: ./prof.ref-x86_64 dicc.txt lluvia
+precipitacion de particulas liquidas de agua                             
+Ejecutando: ./prof.ref-x86_64 dicc.txt alimento
+sustancia ingerida por un ser vivo                                     
+Ejecutando: ./prof.ref-x86_64 dicc.txt celular
+aparato portatil de un sistema de telefonia celular                     
+Ejecutando: ./prof.ref-x86_64 dicc.txt canario
+ave paseriforme de la familia de los fringilidos                        
+Ejecutando: ./prof.ref-x86_64 dicc.txt palacio
+edificio utilizado como residencia de un magnate                        
+Ejecutando: ./prof.ref-x86_64 dicc.txt bolsillo
+bolsa pequena                                                          
+Ejecutando: ./prof.ref-x86_64 dicc.txt correr
+andar tan rapidamente que los pies quedan en el aire                     
+Ejecutando: ./prof.ref-x86_64 dicc.txt nadar
+trasladarse en el agua, con los brazos y sin tocar el suelo               
+Ejecutando: ./prof.ref-x86_64 dicc.txt posada
+establecimiento economico de hospedaje para viajeros                     
+Ejecutando: ./prof.ref-x86_64 dicc.txt taladro
+herramienta aguda o cortante con que se agujerea la madera              
+Ejecutando: ./prof.ref-x86_64 dicc.txt perro
+mamifero domestico con olfato muy fino, inteligente y leal                
+Ejecutando: ./prof.ref-x86_64 dicc.txt techo
+parte superior de un edificio que lo cubre y cierra                       
+-----------------------------------------------------------
+Test de una llave inexistente
+Ejecutando: ./prof.ref-x86_64 dicc.txt gato
+dicc.txt: el diccionario no contiene la llave gato
+Bien.  Se diagnostico correctamente el error.
+-----------------------------------------------------------
+Test con un diccionario inexistente
+Ejecutando: ./prof.ref-x86_64 nodicc.txt bolsillo
+nodicc.txt: No such file or directory
+Bien.  Se diagnostico correctamente el error.
+-----------------------------------------------------------
+Test con diccionario sin permiso de lectura
+Ejecutando: ./prof.ref-x86_64 /tmp/dicc.txt posada
+/tmp/dicc.txt: Permission denied
+Bien.  Se diagnostico correctamente el error.
+-----------------------------------------------------------
+Test de uso incorrecto de parametros
+Ejecutando: ./prof.ref-x86_64 dicc.txt bolsillo bolsa
+Uso: ./consultar.bin <diccionario> <llave>
+Bien.  Se diagnostico correctamente el error.
+Ejecutando: ./prof.ref-x86_64 bolsillo
+Uso: ./consultar.bin <diccionario> <llave>
+Bien.  Se diagnostico correctamente el error.
+-----------------------------------------------------------
+Test de un diccionario vacio
+Ejecutando: ./prof.ref-x86_64 vacio.txt perro
+vacio.txt: el dicionario esta vacio
+Bien.  Se diagnostico correctamente el error.
+-----------------------------------------------------------
+Test de un diccionario con lineas de tamaño variable
+Ejecutando: ./prof.ref-x86_64 dicc-bad.txt perro
+dicc-bad.txt: linea 30 de tamaño incorrecto
+Bien.  Se diagnostico correctamente el error.
+Ejecutando: ./prof.ref-x86_64 dicc-bad2.txt taladro
+dicc-bad2.txt: el tamaño del archivo no es multiplo del tamaño de la linea
+Bien.  Se diagnostico correctamente el error.
+-----------------------------------------------------------
+Test de un diccionario con una linea sin :
+Ejecutando: ./prof.ref-x86_64 dicc-bad3.txt celular
+dicc-bad3.txt: linea 28 no posee : para terminar la llave
+Bien.  Se diagnostico correctamente el error.
+-----------------------------------------------------------
+Test de un diccionario de tamano distinto
+Ejecutando: ./prof.ref-x86_64 dicc2.txt celular
+aparato portatil de un sistema de telefonia celular           
+Ejecutando: ./prof.ref-x86_64 dicc2.txt taladro
+herramienta aguda o cortante con que se agujerea la madera    
+Ejecutando: ./prof.ref-x86_64 dicc2.txt pedro
+dicc2.txt: el diccionario no contiene la llave pedro
+Bien.  Se diagnostico correctamente el error.
+-----------------------------------------------------------
+Test de busqueda en un diccionario completamente lleno
+Ejecutando: ./prof.ref-x86_64 dicc3.txt celular
+aparato portatil de un sistema de telefonia celular           
+Ejecutando: ./prof.ref-x86_64 dicc3.txt posada
+establecimiento economico de hospedaje para viajeros           
+Ejecutando: ./prof.ref-x86_64 dicc3.txt gato
+dicc3.txt: el diccionario no contiene la llave gato
+Bien.  Se diagnostico correctamente el error.
+
+Felicitaciones: aprobo todos los tests
+*/
 
 int main(int argc, char *argv[]) {
   // initial data
   char buff[MAXTAM];
   char *arch = argv[1], *key = argv[2];
   int lenKey = strlen(key);
-  //char *buffKey[lenKey];
 
   // empty dictionary
   FILE *fileDicc = fopen(arch, "r");
-  if (!fileDicc){
-    fprintf(stderr, "%s: el dicionario esta vacio", arch);
-    exit(1);
-  }
+  // if (!fileDicc){
+  //   fprintf(stderr, "%s: el dicionario esta vacio", arch);
+  //   exit(1);
+  // }
 
   // first line length
-  fseek(fileDicc, 0, SEEK_CUR);
-  int lenLine = ftell(fileDicc);
+  int lenLine;
+  if (fgets(buff, MAXTAM, fileDicc) != NULL) lenLine = strlen(buff);
+
   // lines greater than the limit
-  if(lenLine>MAXTAM){
-    fprintf(stderr, "%s: el tamaño de las lineas excede el maximo permitido", arch);
-    exit(2);
-  }
+  // if(lenLine>MAXTAM){
+  //   fprintf(stderr, "%s: el tamaño de las lineas excede el maximo permitido", arch);
+  //   exit(2);
+  // }
 
   // file length
   fseek(fileDicc, 0, SEEK_END);
   int lenArch = ftell(fileDicc);
   // archive not a multiple of the first line length
-  if(!lenArch%lenLine){
-    fprintf(stderr, "%s: el tamaño del archivo no es multiplo del tamaño de la linea", arch);
-    exit(3);
-  }
-  char sol[lenLine+1];
+  // if(!lenArch%lenLine){
+  //   fprintf(stderr, "%s: el tamaño del archivo no es multiplo del tamaño de la linea", arch);
+  //   exit(3);
+  // }
   int lines = lenArch/lenLine;
-  int n = hash_string(key)%lines, j = lines-1;
+  int n = hash_string(key)%lines, j = lines;
 
   // read file
   while(j--){
     fseek(fileDicc, n*lenLine, SEEK_SET);
-    if(fread(buff, lenLine, 1, fileDicc) != 1){
-      fprintf(stderr, "%s: linea %i de tamaño incorrecto", arch, n);
-      exit(4);
-    }
+    fread(buff, lenLine, 1, fileDicc);
+    // if(fread(buff, lenLine, 1, fileDicc) != 1){
+    //   fprintf(stderr, "%s: linea %i de tamaño incorrecto", arch, n);
+    //   exit(4);
+    // }
 
     // it does not have the :
-    if(buff[lenKey] != ':'){
-      fprintf(stderr, "%s: linea %i no posee : para terminar la llave", arch, n);
-      exit(5);
-    }
+    // if(buff[lenKey] != ':'){
+    //   fprintf(stderr, "%s: linea %i no posee : para terminar la llave", arch, n);
+    //   exit(5);
+    // }
 
     int rc = strncmp(key, buff, lenKey);
 
     // same keys
     if(!rc){
-      fseek(fileDicc, 1, SEEK_CUR);
-      fgets(sol, lenLine-lenKey, fileDicc);
-      fprintf(stdout, sol);
+      fseek(fileDicc, n*lenLine+lenKey+1, SEEK_SET);
+      fgets(buff, lenLine, fileDicc);
+      fprintf(stdout, buff);
     }
 
     // next line
     if(++n>lines) n=0;
   }
+  fclose(fileDicc);
+  return 0;
 }
