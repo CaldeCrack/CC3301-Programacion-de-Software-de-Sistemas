@@ -11,11 +11,10 @@
 
 int main(int argc, char *argv[]) {
   // initial data
-  char buf[MAXTAM];
-  char *arch = argv[1];
-  char *key = argv[2];
+  char buff[MAXTAM];
+  char *arch = argv[1], *key = argv[2];
   int lenKey = strlen(key);
-  char *bufKey[lenKey];
+  //char *buffKey[lenKey];
 
   // empty dictionary
   FILE *fileDicc = fopen(arch, "r");
@@ -25,11 +24,8 @@ int main(int argc, char *argv[]) {
   }
 
   // first line length
-  int lenLine;
-  while(1){
-    if(!fgets(buf, MAXTAM, fileDicc)) break;
-  lenLine = strlen(buf);
-  }
+  fseek(fileDicc, 0, SEEK_CUR);
+  int lenLine = ftell(fileDicc);
   // lines greater than the limit
   if(lenLine>MAXTAM){
     fprintf(stderr, "%s: el tamaño de las lineas excede el maximo permitido", arch);
@@ -44,31 +40,34 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "%s: el tamaño del archivo no es multiplo del tamaño de la linea", arch);
     exit(3);
   }
+  char sol[lenLine+1];
   int lines = lenArch/lenLine;
-  long n = hash_string(key)%lines, j = lines-1;
+  int n = hash_string(key)%lines, j = lines-1;
 
   // read file
   while(j--){
     fseek(fileDicc, n*lenLine, SEEK_SET);
-    if(fread(&bufKey, lenLine, 1, fileDicc) != 1){
-      fprintf(stderr, "%s: linea %ld de tamaño incorrecto", arch, n);
+    if(fread(buff, lenLine, 1, fileDicc) != 1){
+      fprintf(stderr, "%s: linea %i de tamaño incorrecto", arch, n);
       exit(4);
     }
-    int rc = strncmp(key, *bufKey, lenKey);
 
     // it does not have the :
-    if(*bufKey[lenKey] != ':'){
-      fprintf(stderr, "%s: linea %ld no posee : para terminar la llave", arch, n);
+    if(buff[lenKey] != ':'){
+      fprintf(stderr, "%s: linea %i no posee : para terminar la llave", arch, n);
       exit(5);
     }
 
+    int rc = strncmp(key, buff, lenKey);
+
     // same keys
     if(!rc){
-      break;
+      fseek(fileDicc, 1, SEEK_CUR);
+      fgets(sol, lenLine-lenKey, fileDicc);
+      fprintf(stdout, sol);
     }
 
     // next line
-    n++;
-    if(n>lines) n=0;
+    if(++n>lines) n=0;
   }
 }

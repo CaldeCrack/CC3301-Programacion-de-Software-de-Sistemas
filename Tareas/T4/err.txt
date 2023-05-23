@@ -1,1 +1,0 @@
-test-consultar.sh: line 12: ./prof.ref-x86_64: Permission denied

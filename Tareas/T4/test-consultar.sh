@@ -1,7 +1,7 @@
 trap "rm -rf /tmp/dicc.txt" EXIT
 ARCH=$(arch)
 CONSULTAR=$1
-chmod +x prof.ref-$(ARCH)
+chmod +x prof.ref-$ARCH
 
 clean() {
   rm -rf /tmp/dicc.txt
