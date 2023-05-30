@@ -41,7 +41,7 @@ sort:                   # void sort(uint nums[], int n) { // registros a0, a1
     # en 0(sp), 4(sp), ... o 44(sp)
     # El valor de p esta temporalmente en el registro t0
     # No puede hacer mas trabajo que la comparacion (no puede usar ret)
-    lw      a0,0(t0)    #     int rc= strcmp(p[0], p[1]); // registro t1
+    lw      a0,0(t0)    # int rc= strcmp(p[0], p[1]); // registro t1
     lw      a1,4(t0)
 
     li      a4,97       # 'a'
@@ -52,40 +52,43 @@ sort:                   # void sort(uint nums[], int n) { // registros a0, a1
 
     # rotar a0
     lbu     a2,0(a0)    # a2 = *a0
-    bge     a2,a4,.0lower122 # carácter a0 es mayor o igual a 'a'
+    bge     a2,a4,.0lower109 # carácter a0 es mayor o igual a 'a'
 
     # rotar a1
     lbu     a3,0(a1)    # a3 = *a1
-    bge     a3,a4,.0lower122 # carácter a1 es mayor o igual a 'a'
+    bge     a3,a4,.1lower109 # carácter a1 es mayor o igual a 'a'
 
-# --- a0 ---
+# ----- a0 -----
 .0lower109: # carácter a0 es menor o igual a 'm'
     bge     a5,a2,.0rotate13low109
 
 .0lower122: # carácter a0 es menor o igual a 'z'
     bge     a6,a2,.0rotate12low122
 
-.0rotate13low109: # sumar 13 si es que esta entre 'a' y 'm'
+.0rotate13low109: # sumar 13 si es que está entre 'a' y 'm'
 	addi	a2,a2,13
 
-.0rotate13low122: # restar 13 si es que esta entre 'n' y 'z'
+.0rotate13low122: # restar 13 si es que está entre 'n' y 'z'
 	addi	a2,a2,-13
 
-# --- a1 ---
+# ----- a1 -----
 .1lower109: # carácter a1 es menor o igual a 'm'
     bge     a5,a3,.1rotate13low109
 
 .1lower122: # carácter a1 es menor o igual a 'z'
     bge     a6,a3,.1rotate12low122
 
-.1rotate13low109: # sumar 13 si es que esta entre 'a' y 'm'
+.1rotate13low109: # sumar 13 si es que está entre 'a' y 'm'
 	addi	a3,a3,13
 
-.1rotate13low122: # restar 13 si es que esta entre 'n' y 'z'
+.1rotate13low122: # restar 13 si es que está entre 'n' y 'z'
 	addi	a3,a3,-13
 
-# comparar valores 
-
+# retornar valor
+    add     a0,a2,-a3   # guardar en a0 el valor de a2-a3
+    mv      t1,a0       # almacenar en t1 este resultado
+    lw      t0,56(sp)   # restaurar el valor de t0
+    bne     t1,zero,.decision   # si t1!=0, estamos listos
 
                         #     valor retornado queda en registro a0
                         #     p ya no esta en el registro t0
