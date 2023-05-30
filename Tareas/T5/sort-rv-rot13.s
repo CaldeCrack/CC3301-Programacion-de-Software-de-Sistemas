@@ -14,6 +14,7 @@
     .globl sort         # Se necesita para que la etiqueta sea conocida en
                         # test-sort.c
     .type sort, @function # typedef unsigned int uint;
+
 sort:                   # void sort(uint nums[], int n) { // registros a0, a1
     addi    sp,sp,-64   #   Apila registro de activacion
     sw      ra, 60(sp)  #   resguarda direccion de retorno
@@ -42,8 +43,51 @@ sort:                   # void sort(uint nums[], int n) { // registros a0, a1
     # No puede hacer mas trabajo que la comparacion (no puede usar ret)
     lw      a0,0(t0)    #     int rc= strcmp(p[0], p[1]); // registro t1
     lw      a1,4(t0)
+
+    li      a4,97       # 'a'
+    li      a5,109      # 'm'
+    li      a6,122      # 'z'
+
     sw      t0,56(sp)   # resguardar p en memoria antes de llamar a strcmp
-    call    strcmp      #     valor retornado queda en registro a0
+
+    # rotar a0
+    lbu     a2,0(a0)    # a2 = *a0
+    bge     a2,a4,.0lower122 # carácter a0 es mayor o igual a 'a'
+
+    # rotar a1
+    lbu     a3,0(a1)    # a3 = *a1
+    bge     a3,a4,.0lower122 # carácter a1 es mayor o igual a 'a'
+
+# --- a0 ---
+.0lower109: # carácter a0 es menor o igual a 'm'
+    bge     a5,a2,.0rotate13low109
+
+.0lower122: # carácter a0 es menor o igual a 'z'
+    bge     a6,a2,.0rotate12low122
+
+.0rotate13low109: # sumar 13 si es que esta entre 'a' y 'm'
+	addi	a2,a2,13
+
+.0rotate13low122: # restar 13 si es que esta entre 'n' y 'z'
+	addi	a2,a2,-13
+
+# --- a1 ---
+.1lower109: # carácter a1 es menor o igual a 'm'
+    bge     a5,a3,.1rotate13low109
+
+.1lower122: # carácter a1 es menor o igual a 'z'
+    bge     a6,a3,.1rotate12low122
+
+.1rotate13low109: # sumar 13 si es que esta entre 'a' y 'm'
+	addi	a3,a3,13
+
+.1rotate13low122: # restar 13 si es que esta entre 'n' y 'z'
+	addi	a3,a3,-13
+
+# comparar valores 
+
+
+                        #     valor retornado queda en registro a0
                         #     p ya no esta en el registro t0
     mv      t1,a0       #     Dejar resultado de la comparacion en t1
 
