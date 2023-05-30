@@ -43,63 +43,7 @@ sort:                   # void sort(uint nums[], int n) { // registros a0, a1
     lw      a0,0(t0)    #     int rc= strcmp(p[0], p[1]); // registro t1
     lw      a1,4(t0)
     sw      t0,56(sp)   # resguardar p en memoria antes de llamar a strcmp
-    .LC0:
-        .string	"nopqrstuvwxyzabcdefghijklm"
-        .text
-        .align	2
-        .globl	strCmp
-        .type	strCmp, @function
-    strCmp:
-        addi	sp,sp,-32
-        lui	a5,%hi(.LC0)
-        addi	a5,a5,%lo(.LC0)
-        lw	t1,0(a5)
-        lw	a7,4(a5)
-        lw	a6,8(a5)
-        lw	a2,12(a5)
-        lw	a3,16(a5)
-        lw	a4,20(a5)
-        sw	t1,4(sp)
-        sw	a7,8(sp)
-        sw	a6,12(sp)
-        sw	a2,16(sp)
-        sw	a3,20(sp)
-        sw	a4,24(sp)
-        lhu	a5,24(a5)
-        sh	a5,28(sp)
-        li	a2,25
-        j	.L5
-    .L3:
-        bne	a5,a4,.L4
-        addi	a0,a0,1
-        addi	a1,a1,1
-        beq	a5,zero,.L4
-    .L5:
-        lbu	a5,0(a0)
-        lbu	a4,0(a1)
-        addi	a3,a5,-97
-        andi	a3,a3,0xff
-        bgtu	a3,a2,.L2
-        addi	a5,a5,32
-        add	a5,a5,sp
-        lbu	a5,-125(a5)
-    .L2:
-        addi	a3,a4,-97
-        andi	a3,a3,0xff
-        bgtu	a3,a2,.L3
-        addi	a4,a4,32
-        add	a4,a4,sp
-        lbu	a4,-125(a4)
-        j	.L3
-    .L4:
-        sub	a0,a5,a4
-        addi	sp,sp,32
-        jr	ra
-        .size	strCmp, .-strCmp
-        .align	2
-        .globl	sort
-        .type	sort, @function
-                        #     // valor retornado queda en registro a0
+    call    strcmp      #     // valor retornado queda en registro a0
                         #     // p ya no esta en el registro t0
     mv      t1,a0       #     // Dejar resultado de la comparacion en t1
 
