@@ -15,18 +15,18 @@
                         # test-sort.c
     .type sort, @function # typedef unsigned int uint;
 sort:                   # void sort(uint nums[], int n) { // registros a0, a1
-    addi    sp,sp,-64   #   // Apila registro de activacion
-    sw      ra, 60(sp)  #   // resguarda direccion de retorno
+    addi    sp,sp,-64   #   Apila registro de activacion
+    sw      ra, 60(sp)  #   resguarda direccion de retorno
     sw      a0,56(sp)   #   uint *p= nums; // p esta en sp+56
     addi    a1,a1,-1    #   uint *ult= &nums[n-1]; // ult esta en sp+52
-    slli    a1,a1,2     #   // tamanno del arreglo
+    slli    a1,a1,2     #   tamanno del arreglo
     add     a1,a0,a1
     sw      a1,52(sp)
-    sw      a0,48(sp)   #   // nums esta en direccion sp+48
-    mv      t0,a0       #   // p esta en registro t0
+    sw      a0,48(sp)   #   nums esta en direccion sp+48
+    mv      t0,a0       #   p esta en registro t0
                         #   while (p<ult) {
-    j       .while_cond #     // la condicion del while se evalua al final
-.while_begin:           #     // del ciclo para mayor eficiencia
+    j       .while_cond #     la condicion del while se evalua al final
+.while_begin:           #     del ciclo para mayor eficiencia
 
     sw      t0,56(sp)   # resguardar p en memoria
 
@@ -43,9 +43,9 @@ sort:                   # void sort(uint nums[], int n) { // registros a0, a1
     lw      a0,0(t0)    #     int rc= strcmp(p[0], p[1]); // registro t1
     lw      a1,4(t0)
     sw      t0,56(sp)   # resguardar p en memoria antes de llamar a strcmp
-    call    strcmp      #     // valor retornado queda en registro a0
-                        #     // p ya no esta en el registro t0
-    mv      t1,a0       #     // Dejar resultado de la comparacion en t1
+    call    strcmp      #     valor retornado queda en registro a0
+                        #     p ya no esta en el registro t0
+    mv      t1,a0       #     Dejar resultado de la comparacion en t1
 
     # En el registro t1 debe quedar la conclusion de la comparacion:
     # si t1<=0 p[0] y p[1] estan en orden y no se intercambiaran.
@@ -59,7 +59,7 @@ sort:                   # void sort(uint nums[], int n) { // registros a0, a1
     # nuevamente que los elementos esten ordenados desde el comienzo del arreglo
 
 .decision:              #     if (0>=rc) {
-    lw      t0,56(sp)   #       // p esta en registro t0
+    lw      t0,56(sp)   #       p esta en registro t0
     blt     zero,t1,.else
     addi    t0,t0,4     #       p++; // avanzar en arreglo de enteros
     j       .while_cond #     }
@@ -72,10 +72,10 @@ sort:                   # void sort(uint nums[], int n) { // registros a0, a1
     lw      t0,48(sp)   #       p= noms;
                         #     }
 
-.while_cond:            #     // se evalua la condicion del while
-    lw      t1,52(sp)   #     // ult esta en t1
-    bltu    t0,t1,.while_begin #  // Condicion del while es p<ult
+.while_cond:            #     se evalua la condicion del while
+    lw      t1,52(sp)   #     ult esta en t1
+    bltu    t0,t1,.while_begin #  Condicion del while es p<ult
 			#   }
-    lw      ra,60(sp)   #   // Se restaura direccion de retorno
-    addi    sp,sp,64    #   // Desapila registro de activacion
+    lw      ra,60(sp)   #   Se restaura direccion de retorno
+    addi    sp,sp,64    #   Desapila registro de activacion
     ret			# }
