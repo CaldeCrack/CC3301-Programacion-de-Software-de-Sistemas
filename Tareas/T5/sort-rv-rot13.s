@@ -63,7 +63,7 @@ sort:                   # void sort(uint nums[], int n) { // registros a0, a1
     bge     a5,a2,.0rotate13low109
 
 .0lower122: # carácter a0 es menor o igual a 'z'
-    bge     a6,a2,.0rotate12low122
+    bge     a6,a2,.0rotate13low122
 
 .0rotate13low109: # sumar 13 si es que está entre 'a' y 'm'
 	addi	a2,a2,13
@@ -76,7 +76,7 @@ sort:                   # void sort(uint nums[], int n) { // registros a0, a1
     bge     a5,a3,.1rotate13low109
 
 .1lower122: # carácter a1 es menor o igual a 'z'
-    bge     a6,a3,.1rotate12low122
+    bge     a6,a3,.1rotate13low122
 
 .1rotate13low109: # sumar 13 si es que está entre 'a' y 'm'
 	addi	a3,a3,13
@@ -85,7 +85,8 @@ sort:                   # void sort(uint nums[], int n) { // registros a0, a1
 	addi	a3,a3,-13
 
 # retornar valor
-    add     a0,a2,-a3   # guardar en a0 el valor de a2-a3
+    neg     a3, a3      # cambiar el valor de a3 a su negativo
+    add     a0,a2,a3   # guardar en a0 el valor de a2-a3
     mv      t1,a0       # almacenar en t1 este resultado
     lw      t0,56(sp)   # restaurar el valor de t0
     bne     t1,zero,.decision   # si t1!=0, estamos listos
