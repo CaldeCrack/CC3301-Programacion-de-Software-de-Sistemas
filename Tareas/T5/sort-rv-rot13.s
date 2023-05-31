@@ -52,6 +52,7 @@ sort:                   # void sort(uint nums[], int n) { // registros a0, a1
     j       .cycle      # entrar al while
 
 .cycle:
+    # ----- da igual de momento -----
     # rotar a0
     lbu     a2,0(a0)    # a2 = *a0
     bge     a2,a4,.0lower109 # carácter a0 es mayor o igual a 'a'
@@ -59,10 +60,10 @@ sort:                   # void sort(uint nums[], int n) { // registros a0, a1
     # rotar a1
     lbu     a3,0(a1)    # a3 = *a1
     bge     a3,a4,.1lower109 # carácter a1 es mayor o igual a 'a'
+    # ----- xd -----
 
-    # condiciones
-    bne     a2,a3,.sum1     # if(c1 != c2) sumar valores;
-    bne     a3,zero,.cycle  # while(c1)
+    # condición de salida
+    beq     a2,a3,.sum1     # if(c1 != c2) sumar valores;
 
     # retornar valor
     sub     a0,a2,a3    # guardar en a0 el valor de c1-c2
@@ -71,8 +72,11 @@ sort:                   # void sort(uint nums[], int n) { // registros a0, a1
     mv      t1,a0       #     Dejar resultado de la comparacion en t1
 
 .sum1:
-    addi    a2,a2,1         # c1++;
-    addi    a3,a3,1         # c2++;
+    addi    a0,a0,1         # c1++;
+    addi    a1,a1,1         # c2++;
+    lbu     a2,0(a0)        # a2 = *a0
+    lbu     a3,0(a1)        # a3 = *a1
+    bne     a2,zero,.cycle  # while(c1)
 
 # ----- a0 -----
 .0lower109: # carácter a0 es menor o igual a 'm'
