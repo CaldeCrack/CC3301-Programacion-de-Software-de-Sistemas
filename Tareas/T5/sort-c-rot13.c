@@ -2,11 +2,16 @@
 
 int strCmp(char *s1, char *s2) {
     char c1=1, c2=0;
-    char conv[] = {'n','o','p','q','r','s','t','u','v','w','x','y','z','a','b','c','d','e','f','g','h','i','j','k','l','m'};
     while(c1){
       c1=*s1; c2=*s2;
-      if(97<=c1 && c1<=122) c1=conv[c1-97];
-      if(97<=c2 && c2<=122) c2=conv[c2-97];
+      if(c1>=97){
+        if(c1<=109) c1+=13;
+        else if(c1<=122) c1-=13;
+      }
+      if(c2>=97){
+        if(c2<=109) c2+=13;
+        else if(c2<=122) c2-=13;
+      }
       if(c1-c2) break;
       s1++; s2++;
     }

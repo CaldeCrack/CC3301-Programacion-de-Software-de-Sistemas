@@ -44,65 +44,46 @@ sort:                   # void sort(uint nums[], int n) { // registros a0, a1
     lw      a0,0(t0)    # int rc= strcmp(p[0], p[1]); // registro t1
     lw      a1,4(t0)
 
-    li      a4,97       # 'a'
-    li      a5,109      # 'm'
-    li      a6,122      # 'z'
+	li	a3,96
+	li	a2,109
+	li	a6,122
+	j	.L7
+.L3:
+	bgtu	a5,a6,.L2
+	addi	a5,a5,-13
+	andi	a5,a5,0xff
+.L2:
+	bleu	a4,a3,.L4
+	bgtu	a4,a2,.L5
+	addi	a4,a4,13
+	andi	a4,a4,0xff
+.L4:
+	bne	a5,a4,.L6
+	addi	a0,a0,1
+	addi	a1,a1,1
+	beq	a5,zero,.L6
+.L7:
+	lbu	a5,0(a0)
+	lbu	a4,0(a1)
+	bleu	a5,a3,.L2
+	bgtu	a5,a2,.L3
+	addi	a5,a5,13
+	andi	a5,a5,0xff
+	j	.L2
+.L5:
+	bgtu	a4,a6,.L4
+	addi	a4,a4,-13
+	andi	a4,a4,0xff
+	j	.L4
 
-    sw      t0,56(sp)   # resguardar p en memoria antes de llamar a strcmp
-    j       .cycle      # entrar al while
+#     sw      t0,56(sp)   # resguardar p en memoria antes de llamar a strcmp
+#     j       .cycle      # entrar al while
 
-.cycle:
-    # ----- da igual de momento -----
-    # rotar a0
-    lbu     a2,0(a0)    # a2 = *a0
-    bge     a2,a4,.0lower109 # carácter a0 es mayor o igual a 'a'
-
-    # rotar a1
-    lbu     a3,0(a1)    # a3 = *a1
-    bge     a3,a4,.1lower109 # carácter a1 es mayor o igual a 'a'
-    # ----- xd -----
-
-    # condición de salida
-    beq     a2,a3,.sum1     # if(c1 != c2) sumar valores;
-
-    # retornar valor
-    sub     a0,a2,a3    # guardar en a0 el valor de c1-c2
-    mv      t1,a0       # almacenar en t1 este resultado
-    bge     zero,t1,.decision   # if(t1<=0) ...
-    mv      t1,a0       #     Dejar resultado de la comparacion en t1
-
-.sum1:
-    addi    a0,a0,1         # c1++;
-    addi    a1,a1,1         # c2++;
-    lbu     a2,0(a0)        # a2 = *a0
-    lbu     a3,0(a1)        # a3 = *a1
-    bne     a2,zero,.cycle  # while(c1)
-
-# ----- a0 -----
-.0lower109: # carácter a0 es menor o igual a 'm'
-    bge     a5,a2,.0rotate13low109
-
-.0lower122: # carácter a0 es menor o igual a 'z'
-    bge     a6,a2,.0rotate13low122
-
-.0rotate13low109: # sumar 13 si es que está entre 'a' y 'm'
-	addi	a2,a2,13
-
-.0rotate13low122: # restar 13 si es que está entre 'n' y 'z'
-	addi	a2,a2,-13
-
-# ----- a1 -----
-.1lower109: # carácter a1 es menor o igual a 'm'
-    bge     a5,a3,.1rotate13low109
-
-.1lower122: # carácter a1 es menor o igual a 'z'
-    bge     a6,a3,.1rotate13low122
-
-.1rotate13low109: # sumar 13 si es que está entre 'a' y 'm'
-	addi	a3,a3,13
-
-.1rotate13low122: # restar 13 si es que está entre 'n' y 'z'
-	addi	a3,a3,-13
+#     # retornar valor
+#     sub     a0,a2,a3    # guardar en a0 el valor de c1-c2
+#     mv      t1,a0       # almacenar en t1 este resultado
+#     bge     zero,t1,.decision   # if(t1<=0) ...
+#     mv      t1,a0       # dejar resultado de la comparacion en t1
 
     # En el registro t1 debe quedar la conclusion de la comparacion:
     # si t1<=0 p[0] y p[1] estan en orden y no se intercambiaran.
