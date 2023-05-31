@@ -43,11 +43,10 @@ sort:                   # void sort(uint nums[], int n) { // registros a0, a1
     # No puede hacer mas trabajo que la comparacion (no puede usar ret)
     lw      a0,0(t0)    # int rc= strcmp(p[0], p[1]); // registro t1
     lw      a1,4(t0)
-
-	li	a3,96
-	li	a2,109
-	li	a6,122
-	j	.L7
+	li	    a3,96       # usar en condición mayor a 'a'
+	li	    a2,109      # 'm'
+	li	    a6,122      # 'z'
+	j	    .L7
 .L3:
 	bgtu	a5,a6,.L2
 	addi	a5,a5,-13
@@ -58,32 +57,29 @@ sort:                   # void sort(uint nums[], int n) { // registros a0, a1
 	addi	a4,a4,13
 	andi	a4,a4,0xff
 .L4:
-	bne	a5,a4,.L6
+	bne	    a5,a4,.L6
 	addi	a0,a0,1
 	addi	a1,a1,1
-	beq	a5,zero,.L6
+	beq	    a5,zero,.L6
 .L7:
-	lbu	a5,0(a0)
-	lbu	a4,0(a1)
+	lbu	    a5,0(a0)
+	lbu	    a4,0(a1)
 	bleu	a5,a3,.L2
 	bgtu	a5,a2,.L3
 	addi	a5,a5,13
 	andi	a5,a5,0xff
-	j	.L2
+	j	    .L2
 .L5:
 	bgtu	a4,a6,.L4
 	addi	a4,a4,-13
 	andi	a4,a4,0xff
-	j	.L4
+	j	    .L4
+.L6:
+    sub	    a0,a5,a4    # almacenar en a0 el resultado de c1-c2
+    mv      t1,a0       # almacenar en t1 el resultado anterior
+    bge     zero,t1,.decision   # if(t1<=0) ...
+    mv      t1,a0       # dejar resultado de la comparacion en t1
 
-#     sw      t0,56(sp)   # resguardar p en memoria antes de llamar a strcmp
-#     j       .cycle      # entrar al while
-
-#     # retornar valor
-#     sub     a0,a2,a3    # guardar en a0 el valor de c1-c2
-#     mv      t1,a0       # almacenar en t1 este resultado
-#     bge     zero,t1,.decision   # if(t1<=0) ...
-#     mv      t1,a0       # dejar resultado de la comparacion en t1
 
     # En el registro t1 debe quedar la conclusion de la comparacion:
     # si t1<=0 p[0] y p[1] estan en orden y no se intercambiaran.
