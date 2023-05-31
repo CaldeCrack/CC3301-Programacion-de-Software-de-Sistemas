@@ -43,43 +43,42 @@ sort:                   # void sort(uint nums[], int n) { // registros a0, a1
     # No puede hacer mas trabajo que la comparacion (no puede usar ret)
     lw      a0,0(t0)    # int rc= strcmp(p[0], p[1]); // registro t1
     lw      a1,4(t0)
-	li	    a3,96       # usar en condición mayor a 'a'
+	li	    a3,96       # para usar en condición mayor a 'a'
 	li	    a2,109      # 'm'
 	li	    a6,122      # 'z'
-	j	    .L7
+	j	    .L7         # jump to L7
 .L3:
-	bgtu	a5,a6,.L2
-	addi	a5,a5,-13
-	andi	a5,a5,0xff
+	bgtu	a5,a6,.L2   # if(c1>122) jump to L2
+	addi	a5,a5,-13   # c1-=13
+	andi	a5,a5,0xff  # idk (supongo que esto es para que sea un valor de 8 bytes si o si)
 .L2:
-	bleu	a4,a3,.L4
-	bgtu	a4,a2,.L5
-	addi	a4,a4,13
-	andi	a4,a4,0xff
+	bleu	a4,a3,.L4   # if(c2<=96) jump to L4
+	bgtu	a4,a2,.L5   # if(c2>109) jump to L5
+	addi	a4,a4,13    # c2+=13
+	andi	a4,a4,0xff  # idk
 .L4:
-	bne	    a5,a4,.L6
-	addi	a0,a0,1
-	addi	a1,a1,1
-	beq	    a5,zero,.L6
+	bne	    a5,a4,.L6   # if(c1!=c2) break;
+	addi	a0,a0,1     # s1++;
+	addi	a1,a1,1     # s2++;
+	beq	    a5,zero,.L6 # while(c1)
 .L7:
-	lbu	    a5,0(a0)
-	lbu	    a4,0(a1)
-	bleu	a5,a3,.L2
-	bgtu	a5,a2,.L3
-	addi	a5,a5,13
-	andi	a5,a5,0xff
-	j	    .L2
+	lbu	    a5,0(a0)    # c1 = *a0
+	lbu	    a4,0(a1)    # c2 = *a1
+	bleu	a5,a3,.L2   # if(c1<=96) jump to L2
+	bgtu	a5,a2,.L3   # if(c1>109) jump to L3
+	addi	a5,a5,13    # c1+=13
+	andi	a5,a5,0xff  # idk
+	j	    .L2         # jump to L2
 .L5:
-	bgtu	a4,a6,.L4
-	addi	a4,a4,-13
-	andi	a4,a4,0xff
-	j	    .L4
+	bgtu	a4,a6,.L4   # if(c2>122) jump to L4
+	addi	a4,a4,-13   # c2-=13
+	andi	a4,a4,0xff  # idk
+	j	    .L4         # jump to L4
 .L6:
-    sub	    a0,a5,a4    # almacenar en a0 el resultado de c1-c2
-    mv      t1,a0       # almacenar en t1 el resultado anterior
-    bge     zero,t1,.decision   # if(t1<=0) ...
-    mv      t1,a0       # dejar resultado de la comparacion en t1
-
+    sub	    a0,a5,a4            # a0 = c1-c2
+    mv      t1,a0               # almacenar en t1 el resultado anterior
+    bge     zero,t1,.decision   # if(t1<=0) jump to decision
+    mv      t1,a0               # dejar resultado de la comparacion en t1
 
     # En el registro t1 debe quedar la conclusion de la comparacion:
     # si t1<=0 p[0] y p[1] estan en orden y no se intercambiaran.
