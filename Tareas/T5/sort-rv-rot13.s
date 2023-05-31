@@ -49,6 +49,7 @@ sort:                   # void sort(uint nums[], int n) { // registros a0, a1
     li      a6,122      # 'z'
 
     sw      t0,56(sp)   # resguardar p en memoria antes de llamar a strcmp
+    j       .cycle      # entrar al while
 
 .cycle:
     # rotar a0
@@ -59,10 +60,11 @@ sort:                   # void sort(uint nums[], int n) { // registros a0, a1
     lbu     a3,0(a1)    # a3 = *a1
     bge     a3,a4,.1lower109 # carácter a1 es mayor o igual a 'a'
 
-    bne     a2,zero,.final  # while(c1 != 0)
-    addi    a2,a2,1
-    addi    a3,a3,1
-    bne     a2,a3,.cycle    # condicion de salida if(c1 != c2) break;
+    beq     a2,a3,.final    # if(c1 == c2) break;
+    addi    a2,a2,1         # c1++;
+    addi    a3,a3,1         # c2++;
+    beq     a2,zero,.final  #
+    bne     a2,zero,.cycle  # while(c1)
 
 # ----- a0 -----
 .0lower109: # carácter a0 es menor o igual a 'm'
@@ -92,12 +94,14 @@ sort:                   # void sort(uint nums[], int n) { // registros a0, a1
 
 # retornar valor
 .final:
-    addi    a2,a2,1
-    addi    a3,a3,1
-    sub     a0,a2,a3   # guardar en a0 el valor de a2-a3
+    # addi    a2,a2,1
+    # addi    a3,a3,1
+    sub     a0,a2,a3    # guardar en a0 el valor de c1-c2
     mv      t1,a0       # almacenar en t1 este resultado
+
     lw      t0,56(sp)   # restaurar el valor de t0
-    bne     t1,zero,.decision   # si t1!=0, estamos listos
+
+    bge     zero,t1,.decision   # if(t1<=0) ...
     mv      t1,a0       #     Dejar resultado de la comparacion en t1
 
     # En el registro t1 debe quedar la conclusion de la comparacion:
