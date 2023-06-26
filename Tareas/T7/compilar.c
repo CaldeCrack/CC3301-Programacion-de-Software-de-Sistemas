@@ -23,8 +23,8 @@ Queue *q;
 // so := fecha del archivo a comparar con c
 int compilable(char *c, char *o, int sc, int so) {
   int lenC = strlen(c), lenO = strlen(o);
-  // Archivos no coinciden en largo o potencial archivo ".o" tiene fecha posterior al archivo ".c"
-  if (lenC != lenO || sc > so) {
+  // Archivos no coinciden en largo, potencial archivo ".o" tiene fecha posterior al archivo ".c" o es el mismo archivo
+  if (lenC != lenO || sc <= so || !strcmp(c, o)) {
     return 1;
   }
   // Tienen el mismo nombre hasta el "." que indica la extension
@@ -67,8 +67,8 @@ void listDir(char *nom, char *root) {
           continue;
         }
         // Nombre del archivo que estamos revisando
-        char *nom_arch= malloc(strlen(nom)+strlen(entry->d_name)+2);
-        strcpy(nom_arch, nom);
+        char *nom_arch= malloc(strlen(root)+strlen(entry->d_name)+2);
+        strcpy(nom_arch, root);
         strcat(nom_arch, "/");
         strcat(nom_arch, entry->d_name);
         // Creamos el stat del archivo a revisar
@@ -85,7 +85,6 @@ void listDir(char *nom, char *root) {
       closedir(dir);
       // Si no se encontró archivo ".o" con las condiciones hay que compilar el archivo
       if (compile) {
-        printf("%s\n", nom);
         put(q, nom);
       }
     }
