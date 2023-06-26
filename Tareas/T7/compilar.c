@@ -24,7 +24,7 @@ Queue *q;
 int compilable(char *c, char *o, int sc, int so) {
   int lenC = strlen(c), lenO = strlen(o);
   // Archivos no coinciden en largo o potencial archivo ".o" tiene fecha posterior al archivo ".c"
-  if (lenC != lenO || sc <= so) {
+  if (lenC != lenO || sc > so) {
     return 1;
   }
   // Tienen el mismo nombre hasta el "." que indica la extension
@@ -85,8 +85,8 @@ void listDir(char *nom, char *root) {
       closedir(dir);
       // Si no se encontró archivo ".o" con las condiciones hay que compilar el archivo
       if (compile) {
-        put(q, nom);
         printf("%s\n", nom);
+        put(q, nom);
       }
     }
   }
@@ -122,6 +122,8 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "uso: %s <arch|dir>\n", argv[0]);
     exit(1);
   }
+  // Creamos la cola
+  q = makeQueue();
   // Encontrar archivos .c validos
   listDir(argv[1], argv[1]);
   // Ordenar queue
