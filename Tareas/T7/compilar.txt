@@ -1,5 +1,0 @@
-dir/sort-c.c
-dir/test-elim-rango.c
-dir/test-sort.c
-dir/222/ejemplo-sort.c
-dir/222/pss.c

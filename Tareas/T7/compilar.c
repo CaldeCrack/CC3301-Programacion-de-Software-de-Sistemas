@@ -15,16 +15,20 @@
 // Cola global
 Queue *q;
 
-// Devuelve 0 si el archivo no debe compilarse
-// Devuelve 1 sino
-// c := nombre del archivo .c
-// o := nombre del archivo a comparar con c
-// sc := fecha del archivo .c
-// so := fecha del archivo a comparar con c
+// Ordenar los archivos alfabéticamente
+int cmpFiles(void *ptr, int i, int j) {
+  char **a = ptr;
+  return strcmp(a[i], a[j]);
+}
+
+// Revisar si el archivo c no debe compilarse
+// Devuelve 0 si el archivo no debe compilarse y 1 sino
+// c := nombre del archivo .c                / sc := fecha del archivo .c
+// o := nombre del archivo a comparar con c  / so := fecha del archivo a comparar con c
 int compilable(char *c, char *o, int sc, int so) {
   int lenC = strlen(c), lenO = strlen(o);
   // Archivos no coinciden en largo, potencial archivo ".o" tiene fecha posterior al archivo ".c" o es el mismo archivo
-  if (lenC != lenO || sc <= so || !strcmp(c, o)) {
+  if (lenC != lenO || sc > so || !strcmp(c, o)) {
     return 1;
   }
   // Tienen el mismo nombre hasta el "." que indica la extension
@@ -49,7 +53,6 @@ void listDir(char *nom, char *root) {
   rc= stat(nom, &st_nom);
 
   if (rc!=0) {
-    printf("%s no existe\n", nom);
     exit(0);
   }
   if (S_ISREG(st_nom.st_mode)) {
@@ -82,18 +85,17 @@ void listDir(char *nom, char *root) {
         }
         free(nom_arch);
       }
-      closedir(dir);
       // Si no se encontró archivo ".o" con las condiciones hay que compilar el archivo
       if (compile) {
-        put(q, nom);
+        put(q, strdup(nom));
       }
+      closedir(dir);
     }
   }
   else if (S_ISDIR(st_nom.st_mode)) {
     // Es un directorio
     DIR *dir = opendir(nom);
     if (dir == NULL) {
-      perror(nom);
       exit(1);
     }
     for (struct dirent *entry = readdir(dir); entry != NULL; entry = readdir(dir)) {
@@ -111,25 +113,35 @@ void listDir(char *nom, char *root) {
   }
   else {
     // Podria ser un dispositivo, un link simbolico, etc.
-    fprintf(stderr, "Archivo %s es de tipo desconocido\n", nom);
     exit(1);
   }
 }
 
 int main(int argc, char *argv[]) {
   if (argc!=2) {
-    fprintf(stderr, "uso: %s <arch|dir>\n", argv[0]);
     exit(1);
   }
   // Creamos la cola
   q = makeQueue();
   // Encontrar archivos .c validos
   listDir(argv[1], argv[1]);
-  // Ordenar queue
 
+  // Crear arreglo en base a la queue
+  int queueLen = queueLength(q);
+  char *dirs[queueLen];
+  for (int i = 0; i < queueLen; i++) {
+    dirs[i] = get(q);
+  }
 
-  // Potencialmente liberar memoria
+  // Ordenar arreglo e imprimirlo
+  sortPtrArray(dirs, 0, queueLen-1, cmpFiles);
+  for (int i = 0; i < queueLen; i++) {
+    printf("%s\n", dirs[i]);
+  }
 
+  // Liberar memoria
+  
+  destroyQueue(q);
 
   return 0;
 }

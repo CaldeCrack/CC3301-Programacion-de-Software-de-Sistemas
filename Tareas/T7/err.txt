@@ -1,0 +1,20 @@
+
+=================================================================
+==10133==ERROR: LeakSanitizer: detected memory leaks
+
+Direct leak of 78 byte(s) in 4 object(s) allocated from:
+    #0 0x7f3e18b7c817 in __interceptor_strdup ../../../../src/libsanitizer/asan/asan_interceptors.cpp:452
+    #1 0x55ea82c87e19 in listDir /home/caldecrack/pss/Tareas/T7/compilar.c:90
+    #2 0x55ea82c88264 in listDir /home/caldecrack/pss/Tareas/T7/compilar.c:109
+    #3 0x55ea82c884d1 in main /home/caldecrack/pss/Tareas/T7/compilar.c:127
+    #4 0x7f3e18009d09 in __libc_start_main ../csu/libc-start.c:308
+
+Direct leak of 23 byte(s) in 1 object(s) allocated from:
+    #0 0x7f3e18b7c817 in __interceptor_strdup ../../../../src/libsanitizer/asan/asan_interceptors.cpp:452
+    #1 0x55ea82c87e19 in listDir /home/caldecrack/pss/Tareas/T7/compilar.c:90
+    #2 0x55ea82c88264 in listDir /home/caldecrack/pss/Tareas/T7/compilar.c:109
+    #3 0x55ea82c88264 in listDir /home/caldecrack/pss/Tareas/T7/compilar.c:109
+    #4 0x55ea82c884d1 in main /home/caldecrack/pss/Tareas/T7/compilar.c:127
+    #5 0x7f3e18009d09 in __libc_start_main ../csu/libc-start.c:308
+
+SUMMARY: AddressSanitizer: 101 byte(s) leaked in 5 allocation(s).
