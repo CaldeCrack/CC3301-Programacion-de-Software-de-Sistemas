@@ -2,6 +2,12 @@
     "files.associations": {
         "comprimir.h": "c",
         "string.h": "c",
-        "cstdio": "c"
+        "cstdio": "c",
+        "*.tcc": "c",
+        "string": "c",
+        "unordered_map": "c",
+        "functional": "c",
+        "string_view": "c",
+        "streambuf": "c"
     }
 }
