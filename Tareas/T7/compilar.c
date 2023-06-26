@@ -132,16 +132,14 @@ int main(int argc, char *argv[]) {
   for (int i = 0; i < queueLen; i++) {
     dirs[i] = get(q);
   }
+  destroyQueue(q);
 
   // Ordenar arreglo e imprimirlo
   sortPtrArray(dirs, 0, queueLen-1, cmpFiles);
   for (int i = 0; i < queueLen; i++) {
     printf("%s\n", dirs[i]);
+    free(dirs[i]);
   }
-
-  // Liberar memoria
-  
-  destroyQueue(q);
 
   return 0;
 }
