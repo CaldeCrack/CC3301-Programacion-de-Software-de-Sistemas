@@ -27,31 +27,32 @@ int leer(int fd, void *vbuf, int n) {
 double llenarMaleta(double w[], double v[], int z[], int n, double maxW, int k) {
 	int pids[8];
 	int fds[8][2];
+	int *z2[8][n];
+	double res = 0;
 
-	for(int i=0; i<8; i++){
+	for (int i=0; i<8; i++) {
 		pipe(fds[i]);
 		pids[i] = fork();
-    srandom(getUSecsOfDay()*getpid());
+		srandom(getUSecsOfDay()*getpid());
 
-		if(pids[i] == 0){ // hijo
+		if (pids[i] == 0) { // hijo
 			close(fds[i][0]);
 			double res = llenarMaletaSec(w, v, z, n, maxW, k/8);
+			*z2[i] = z;
 			write(fds[i][1], &res, sizeof(int));
 			exit(0);
-		}
-		else{ // padre
+		} else { // padre
 			close(fds[i][1]);
-		}
-	}
-
-	double res = 0;
-	for(int i=0; i<8; i++){
-		double res_hijo;
-		read(fds[i][0], &res_hijo, sizeof(double));
-		close(fds[i][0]);
-		waitpid(pids[i], NULL, 0);
-		if(res_hijo > res){
-			res = res_hijo;
+			for (int i=0; i<8; i++) {
+				double res_hijo;
+				leer(fds[i][0], &res_hijo, sizeof(double));
+				close(fds[i][0]);
+				waitpid(pids[i], NULL, 0);
+				if (res_hijo > res) {
+					res = res_hijo;
+					z = *z2[i];
+				}
+			}
 		}
 	}
 	return res;
