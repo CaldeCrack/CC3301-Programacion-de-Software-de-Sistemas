@@ -8,6 +8,9 @@
         "unordered_map": "c",
         "functional": "c",
         "string_view": "c",
-        "streambuf": "c"
+        "streambuf": "c",
+        "random": "c",
+        "limits": "c",
+        "numeric": "c"
     }
 }
