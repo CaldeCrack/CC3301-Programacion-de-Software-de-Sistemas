@@ -28,7 +28,6 @@ double llenarMaleta(double w[], double v[], int z[], int n, double maxW, int k) 
 	int pids[8];
 	int fds[8][2];
 	int *z2[8][n];
-	double res = 0;
 
 	for (int i=0; i<8; i++) {
 		pipe(fds[i]);
@@ -39,21 +38,23 @@ double llenarMaleta(double w[], double v[], int z[], int n, double maxW, int k) 
 			close(fds[i][0]);
 			double res = llenarMaletaSec(w, v, z, n, maxW, k/8);
 			*z2[i] = z;
-			write(fds[i][1], &res, sizeof(int));
+			write(fds[i][1], &res, sizeof(res));
 			exit(0);
 		} else { // padre
 			close(fds[i][1]);
-			for (int i=0; i<8; i++) {
-				double res_hijo;
-				leer(fds[i][0], &res_hijo, sizeof(double));
-				close(fds[i][0]);
-				waitpid(pids[i], NULL, 0);
-				if (res_hijo > res) {
-					res = res_hijo;
-					z = *z2[i];
-				}
-			}
 		}
 	}
-	return res;
+
+	double sum = 0;
+	for(int i=0; i<8; i++){
+		double max_sum;
+		leer(fds[i][0], &max_sum, sizeof(max_sum));
+		if(max_sum > sum) {
+			sum = max_sum;
+			z = *z2[i];
+		}
+		close(fds[i][0]);
+		waitpid(pids[i], NULL, 0);
+	}
+	return sum;
 }
