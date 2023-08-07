@@ -30,7 +30,7 @@ double llenarMaleta(double w[], double v[], int z[], int n, double maxW, int k) 
 
   for (int i=0; i<8; i++) {
     pipe(fds[i]);
-    pids[i] = fork();
+    pids[i] = fork()
     srandom(getUSecsOfDay()*getpid());
 
     if (pids[i] == 0) { // hijo
